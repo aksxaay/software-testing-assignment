@@ -1,0 +1,30 @@
+@startuml
+User -> Front_End : Upload Post
+Front_End --> User : Select Picture
+User -> Front_End : Upload Picture
+Front_End --> User : Enter Caption
+User -> Front_End : Upload Caption 
+User -> Front_End : Submit
+
+Front_End -> Back_End : Send Data through JSON 
+Back_End -> Database : Upload Picture to File System
+Database --> Back_End : Transaction Complete
+Back_End -> Database : Upload Caption to Post Database
+Database --> Back_End : Transaction Complete
+Back_End -> Database : Upload Posts to Post Database
+Database --> Back_End : Transaction Complete
+
+alt Transaction Complete 
+  Back_End --> Front_End : Transaction Complete
+else Transaction Failed
+  Back_End --> Front_End : Transaction Failed
+  Front_End -> Back_End : Resend Data through JSON
+end
+
+alt Post Uploaded
+  Front_End --> User : Post Uploaded
+else Upload Fail
+  Front_End --> User : Upload Failed
+end
+
+@enduml
